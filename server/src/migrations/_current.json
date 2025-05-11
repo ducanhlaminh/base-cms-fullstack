@@ -1,0 +1,496 @@
+{
+  "tables": {
+    "articles": {
+      "tableName": "articles",
+      "schema": "public",
+      "attributes": {
+        "id": {
+          "primaryKey": true,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": {},
+          "type": "UUID",
+          "unique": false,
+          "references": null
+        },
+        "title": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "slug": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": true,
+          "references": null
+        },
+        "content": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "TEXT",
+          "unique": false,
+          "references": null
+        },
+        "excerpt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "TEXT",
+          "unique": false,
+          "references": null
+        },
+        "featuredImage": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": "",
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "categoryId": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "UUID",
+          "unique": false,
+          "references": {
+            "model": "categories",
+            "key": "id"
+          }
+        },
+        "tags": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": [],
+          "type": "ARRAY",
+          "unique": false,
+          "references": null
+        },
+        "authorId": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "UUID",
+          "unique": false,
+          "references": {
+            "model": "users",
+            "key": "id"
+          }
+        },
+        "status": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": "draft",
+          "type": "ENUM",
+          "unique": false,
+          "references": null
+        },
+        "publishedAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        },
+        "featured": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": false,
+          "type": "BOOLEAN",
+          "unique": false,
+          "references": null
+        },
+        "views": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": 0,
+          "type": "INTEGER",
+          "unique": false,
+          "references": null
+        },
+        "lastEditedById": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "UUID",
+          "unique": false,
+          "references": {
+            "model": "users",
+            "key": "id"
+          }
+        },
+        "createdAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        },
+        "updatedAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        }
+      },
+      "indexes": [
+        {
+          "name": "articles_slug",
+          "unique": false,
+          "fields": [
+            "slug"
+          ],
+          "using": "BTREE"
+        },
+        {
+          "name": "articles_status_published_at",
+          "unique": false,
+          "fields": [
+            "status",
+            "publishedAt"
+          ],
+          "using": "BTREE"
+        },
+        {
+          "name": "articles_author_id",
+          "unique": false,
+          "fields": [
+            "authorId"
+          ],
+          "using": "BTREE"
+        },
+        {
+          "name": "articles_category_id",
+          "unique": false,
+          "fields": [
+            "categoryId"
+          ],
+          "using": "BTREE"
+        }
+      ]
+    },
+    "categories": {
+      "tableName": "categories",
+      "schema": "public",
+      "attributes": {
+        "id": {
+          "primaryKey": true,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": {},
+          "type": "UUID",
+          "unique": false,
+          "references": null
+        },
+        "name": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": true,
+          "references": null
+        },
+        "slug": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": true,
+          "references": null
+        },
+        "description": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "TEXT",
+          "unique": false,
+          "references": null
+        },
+        "parentId": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "UUID",
+          "unique": false,
+          "references": {
+            "model": "categories",
+            "key": "id"
+          }
+        },
+        "image": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": "",
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "order": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": 0,
+          "type": "INTEGER",
+          "unique": false,
+          "references": null
+        },
+        "createdById": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "UUID",
+          "unique": false,
+          "references": {
+            "model": "users",
+            "key": "id"
+          }
+        },
+        "createdAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        },
+        "updatedAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        }
+      },
+      "indexes": []
+    },
+    "menus": {
+      "tableName": "menus",
+      "schema": "public",
+      "attributes": {
+        "id": {
+          "primaryKey": true,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": {},
+          "type": "UUID",
+          "unique": false,
+          "references": null
+        },
+        "name": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "location": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "items": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "defaultValue": [],
+          "type": "JSONB",
+          "unique": false,
+          "references": null
+        },
+        "active": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": true,
+          "type": "BOOLEAN",
+          "unique": false,
+          "references": null
+        },
+        "order": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": 0,
+          "type": "INTEGER",
+          "unique": false,
+          "references": null
+        },
+        "createdById": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "UUID",
+          "unique": false,
+          "references": {
+            "model": "users",
+            "key": "id"
+          }
+        },
+        "createdAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        },
+        "updatedAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        }
+      },
+      "indexes": []
+    },
+    "users": {
+      "tableName": "users",
+      "schema": "public",
+      "attributes": {
+        "id": {
+          "primaryKey": true,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": {},
+          "type": "UUID",
+          "unique": false,
+          "references": null
+        },
+        "firstName": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "lastName": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "email": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": true,
+          "references": null
+        },
+        "password": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "roleId": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "UUID",
+          "unique": false,
+          "references": {
+            "model": "roles",
+            "key": "id"
+          }
+        },
+        "avatar": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": "",
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "bio": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": "",
+          "type": "TEXT",
+          "unique": false,
+          "references": null
+        },
+        "isActive": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": true,
+          "type": "BOOLEAN",
+          "unique": false,
+          "references": null
+        },
+        "lastLogin": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        },
+        "passwordResetToken": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "passwordResetExpires": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        },
+        "createdAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        },
+        "updatedAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        }
+      },
+      "indexes": []
+    }
+  }
+}
