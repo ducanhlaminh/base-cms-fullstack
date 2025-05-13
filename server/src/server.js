@@ -1,7 +1,6 @@
 const dotenv = require("dotenv");
 const app = require("./app");
 const { sequelize, connectDB } = require("./config/db");
-const initDatabase = require("./seeders/init");
 
 // Load environment variables
 dotenv.config();
@@ -13,15 +12,16 @@ const startServer = async () => {
     await connectDB();
 
     // Sync database models (create tables if they don't exist)
-    await sequelize.sync({ alter: process.env.NODE_ENV === "development" });
+    await sequelize.drop();
+    await sequelize.sync({ force: true });
     console.log("Database synchronized");
 
     // Initialize database with default data
-    if (process.env.NODE_ENV === "development") {
-      console.log("Starting database initialization...");
-      await initDatabase();
-      console.log("Database initialization completed");
-    }
+    // if (process.env.NODE_ENV === "development") {
+    //   console.log("Starting database initialization...");
+    //   await initDatabase();
+    //   console.log("Database initialization completed");
+    // }
 
     // Start the server
     const PORT = process.env.PORT || 3000;

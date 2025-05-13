@@ -2,28 +2,17 @@ const { Model, DataTypes } = require("sequelize");
 const slugify = require("slugify");
 
 module.exports = (sequelize) => {
-  class Category extends Model {
+  class Brand extends Model {
     static associate(models) {
-      // Self-referencing relationship for nested categories
-      Category.belongsTo(Category, {
-        foreignKey: "parentId",
-        as: "parent",
-      });
-
-      Category.hasMany(Category, {
-        foreignKey: "parentId",
-        as: "children",
-      });
-
       // Define associations
-      Category.hasMany(models.Product, {
-        foreignKey: "categoryId",
+      Brand.hasMany(models.Product, {
+        foreignKey: "brandId",
         as: "products",
       });
     }
   }
 
-  Category.init(
+  Brand.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -33,8 +22,9 @@ module.exports = (sequelize) => {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
-          notEmpty: { msg: "Category name is required" },
+          notEmpty: { msg: "Brand name is required" },
         },
       },
       slug: {
@@ -46,25 +36,13 @@ module.exports = (sequelize) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      parentId: {
-        type: DataTypes.UUID,
-        allowNull: true,
-        references: {
-          model: "categories",
-          key: "id",
-        },
-      },
-      image: {
+      logo: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      icon: {
+      website: {
         type: DataTypes.STRING,
         allowNull: true,
-      },
-      sortOrder: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
       },
       isFeatured: {
         type: DataTypes.BOOLEAN,
@@ -72,10 +50,10 @@ module.exports = (sequelize) => {
       },
       status: {
         type: DataTypes.STRING,
+        defaultValue: "active",
         validate: {
           isIn: [["active", "inactive"]],
         },
-        defaultValue: "active",
       },
       metaTitle: {
         type: DataTypes.STRING,
@@ -88,25 +66,21 @@ module.exports = (sequelize) => {
     },
     {
       sequelize,
-      modelName: "Category",
-      tableName: "categories",
+      modelName: "Brand",
+      tableName: "brands",
       hooks: {
-        beforeValidate: (category) => {
-          if (category.name) {
-            category.slug = slugify(category.name, {
+        beforeValidate: (brand) => {
+          if (brand.name) {
+            brand.slug = slugify(brand.name, {
               lower: true,
               strict: true,
             });
           }
         },
       },
-      indexes: [
-        { fields: ["slug"] },
-        { fields: ["parentId"] },
-        { fields: ["status"] },
-      ],
+      indexes: [{ fields: ["slug"] }, { fields: ["status"] }],
     }
   );
 
-  return Category;
+  return Brand;
 };

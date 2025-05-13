@@ -1,24 +1,32 @@
 const fs = require("fs");
 const path = require("path");
-const { sequelize } = require("../config/db");
 const Sequelize = require("sequelize");
+const config = require("../config/db.config");
 
-const basename = path.basename(__filename);
 const db = {};
 
-// Import all models from the sequelize directory
-fs.readdirSync(path.join(__dirname))
-  .filter((file) => {
-    return (
-      file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".js"
-    );
-  })
+// Create a new Sequelize instance
+const sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  {
+    host: config.host,
+    dialect: config.dialect,
+    logging: config.logging,
+  }
+);
+
+// Import all model files
+fs.readdirSync(__dirname)
+  .filter((file) => file !== "index.js" && file !== "sequelize")
   .forEach((file) => {
+    console.log(file);
     const model = require(path.join(__dirname, file))(sequelize);
     db[model.name] = model;
   });
 
-// Associate all models if they have associate method
+// Set up model associations
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);

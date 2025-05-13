@@ -1,72 +1,57 @@
 const jwt = require("jsonwebtoken");
+const asyncHandler = require("express-async-handler");
 const db = require("../models");
+const User = db.User;
 
-// Protect routes - only authenticated users can access
-exports.protect = async (req, res, next) => {
-  try {
-    let token;
+/**
+ * Middleware for protecting routes
+ * Verifies JWT token in the request headers
+ * Sets req.user if token is valid
+ */
+const protect = asyncHandler(async (req, res, next) => {
+  let token;
 
-    // Check if token is in the headers
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
-    }
-
-    // Check if token exists
-    if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: "Not authorized to access this route",
-      });
-    }
-
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
     try {
+      // Extract token from header
+      token = req.headers.authorization.split(" ")[1];
+
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // Find user by id
-      const user = await db.User.findByPk(decoded.id, {
-        include: {
-          model: db.Role,
-          as: "role",
-          attributes: ["id", "name", "permissions"],
-        },
+      // Set user in req object (exclude password)
+      req.user = await User.findByPk(decoded.id, {
+        attributes: { exclude: ["password"] },
+        include: [{ model: db.Role, as: "role" }],
       });
 
-      // Check if user exists
-      if (!user) {
-        return res.status(401).json({
-          success: false,
-          message: "The user belonging to this token no longer exists",
-        });
+      if (!req.user) {
+        res.status(401);
+        throw new Error("User not found");
       }
 
-      // Check if user is active
-      if (!user.isActive) {
-        return res.status(401).json({
-          success: false,
-          message: "Your account has been deactivated",
-        });
-      }
-
-      // Set user in request object
-      req.user = user;
       next();
     } catch (error) {
-      return res.status(401).json({
-        success: false,
-        message: "Not authorized to access this route",
-      });
+      res.status(401);
+      if (error.name === "TokenExpiredError") {
+        throw new Error("Token expired, please login again");
+      } else if (error.name === "JsonWebTokenError") {
+        throw new Error("Invalid token, please login again");
+      } else {
+        throw new Error("Not authorized, please login again");
+      }
     }
-  } catch (error) {
-    next(error);
+  } else {
+    res.status(401);
+    throw new Error("Not authorized, no token provided");
   }
-};
+});
 
 // Authorize roles - restrict access to certain roles
-exports.authorize = (...roles) => {
+const authorize = (...roles) => {
   return (req, res, next) => {
     if (!req.user || !req.user.role || !req.user.role.name) {
       return res.status(403).json({
@@ -88,7 +73,7 @@ exports.authorize = (...roles) => {
 };
 
 // Check permissions - restrict access based on resource permissions
-exports.checkPermission = (resource, action) => {
+const checkPermission = (resource, action) => {
   return (req, res, next) => {
     if (!req.user || !req.user.role || !req.user.role.permissions) {
       return res.status(403).json({
@@ -114,4 +99,11 @@ exports.checkPermission = (resource, action) => {
 
     next();
   };
+};
+
+module.exports = {
+  protect,
+  authorize,
+  checkPermission,
+  default: protect, // For backward compatibility in case anyone is using the default export
 };

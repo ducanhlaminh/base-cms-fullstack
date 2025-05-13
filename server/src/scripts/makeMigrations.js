@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const { sequelize } = require("../config/db");
 const migrationPath = path.resolve(__dirname, "../migrations");
-const modelsPath = path.resolve(__dirname, "../models/sequelize");
+const modelsPath = path.resolve(__dirname, "../models");
 
 // Ensure migrations directory exists
 if (!fs.existsSync(migrationPath)) {

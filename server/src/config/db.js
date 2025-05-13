@@ -1,24 +1,20 @@
 const { Sequelize } = require("sequelize");
-const dotenv = require("dotenv");
-
-// Load environment variables
-dotenv.config();
+const config = require("./db.config");
 
 // Database configuration
 const sequelize = new Sequelize(
-  process.env.DB_NAME || "news_cms",
-  process.env.DB_USER || "postgres",
-  process.env.DB_PASSWORD || "postgres",
+  config.database,
+  config.username,
+  config.password,
   {
-    host: process.env.DB_HOST || "localhost",
-    port: process.env.DB_PORT || 5432,
-    dialect: "postgres",
-    logging: process.env.NODE_ENV === "development" ? console.log : false,
+    host: config.host,
+    dialect: config.dialect,
+    logging: config.logging,
     pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000,
+      max: config.pool.max,
+      min: config.pool.min,
+      acquire: config.pool.acquire,
+      idle: config.pool.idle,
     },
   }
 );
@@ -27,7 +23,6 @@ const connectDB = async () => {
   try {
     await sequelize.authenticate();
     console.log("Database connection has been established successfully.");
-    return sequelize;
   } catch (error) {
     console.error("Unable to connect to the database:", error);
     process.exit(1);

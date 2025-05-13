@@ -1,7 +1,7 @@
 {
   "tables": {
-    "articles": {
-      "tableName": "articles",
+    "banners": {
+      "tableName": "banners",
       "schema": "public",
       "attributes": {
         "id": {
@@ -21,97 +21,32 @@
           "unique": false,
           "references": null
         },
-        "slug": {
+        "imageUrl": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": false,
           "type": "STRING",
-          "unique": true,
-          "references": null
-        },
-        "content": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": false,
-          "type": "TEXT",
           "unique": false,
           "references": null
         },
-        "excerpt": {
+        "linkUrl": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": true,
-          "type": "TEXT",
-          "unique": false,
-          "references": null
-        },
-        "featuredImage": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": true,
-          "defaultValue": "",
           "type": "STRING",
           "unique": false,
           "references": null
         },
-        "categoryId": {
+        "position": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": false,
-          "type": "UUID",
-          "unique": false,
-          "references": {
-            "model": "categories",
-            "key": "id"
-          }
-        },
-        "tags": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": true,
-          "defaultValue": [],
-          "type": "ARRAY",
+          "defaultValue": "home_top",
+          "type": "STRING",
           "unique": false,
           "references": null
         },
-        "authorId": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": false,
-          "type": "UUID",
-          "unique": false,
-          "references": {
-            "model": "users",
-            "key": "id"
-          }
-        },
-        "status": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": true,
-          "defaultValue": "draft",
-          "type": "ENUM",
-          "unique": false,
-          "references": null
-        },
-        "publishedAt": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": true,
-          "type": "DATE",
-          "unique": false,
-          "references": null
-        },
-        "featured": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": true,
-          "defaultValue": false,
-          "type": "BOOLEAN",
-          "unique": false,
-          "references": null
-        },
-        "views": {
+        "sortOrder": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": true,
@@ -120,16 +55,80 @@
           "unique": false,
           "references": null
         },
-        "lastEditedById": {
+        "startDate": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": true,
-          "type": "UUID",
+          "type": "DATE",
           "unique": false,
-          "references": {
-            "model": "users",
-            "key": "id"
-          }
+          "references": null
+        },
+        "endDate": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        },
+        "isActive": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": true,
+          "type": "BOOLEAN",
+          "unique": false,
+          "references": null
+        },
+        "description": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "TEXT",
+          "unique": false,
+          "references": null
+        },
+        "buttonText": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "type": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": "main_slider",
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "device": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": "all",
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "bgColor": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "textColor": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "STRING",
+          "unique": false,
+          "references": null
         },
         "createdAt": {
           "primaryKey": false,
@@ -150,42 +149,33 @@
       },
       "indexes": [
         {
-          "name": "articles_slug",
+          "name": "banners_position",
           "unique": false,
           "fields": [
-            "slug"
+            "position"
           ],
           "using": "BTREE"
         },
         {
-          "name": "articles_status_published_at",
+          "name": "banners_type",
           "unique": false,
           "fields": [
-            "status",
-            "publishedAt"
+            "type"
           ],
           "using": "BTREE"
         },
         {
-          "name": "articles_author_id",
+          "name": "banners_is_active",
           "unique": false,
           "fields": [
-            "authorId"
-          ],
-          "using": "BTREE"
-        },
-        {
-          "name": "articles_category_id",
-          "unique": false,
-          "fields": [
-            "categoryId"
+            "isActive"
           ],
           "using": "BTREE"
         }
       ]
     },
-    "categories": {
-      "tableName": "categories",
+    "brands": {
+      "tableName": "brands",
       "schema": "public",
       "attributes": {
         "id": {
@@ -221,45 +211,55 @@
           "unique": false,
           "references": null
         },
-        "parentId": {
+        "logo": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": true,
-          "type": "UUID",
-          "unique": false,
-          "references": {
-            "model": "categories",
-            "key": "id"
-          }
-        },
-        "image": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": true,
-          "defaultValue": "",
           "type": "STRING",
           "unique": false,
           "references": null
         },
-        "order": {
+        "website": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": true,
-          "defaultValue": 0,
-          "type": "INTEGER",
+          "type": "STRING",
           "unique": false,
           "references": null
         },
-        "createdById": {
+        "isFeatured": {
           "primaryKey": false,
           "autoIncrement": false,
-          "allowNull": false,
-          "type": "UUID",
+          "allowNull": true,
+          "defaultValue": false,
+          "type": "BOOLEAN",
           "unique": false,
-          "references": {
-            "model": "users",
-            "key": "id"
-          }
+          "references": null
+        },
+        "status": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": "active",
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "metaTitle": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "metaDescription": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "TEXT",
+          "unique": false,
+          "references": null
         },
         "createdAt": {
           "primaryKey": false,
@@ -278,10 +278,27 @@
           "references": null
         }
       },
-      "indexes": []
+      "indexes": [
+        {
+          "name": "brands_slug",
+          "unique": false,
+          "fields": [
+            "slug"
+          ],
+          "using": "BTREE"
+        },
+        {
+          "name": "brands_status",
+          "unique": false,
+          "fields": [
+            "status"
+          ],
+          "using": "BTREE"
+        }
+      ]
     },
-    "menus": {
-      "tableName": "menus",
+    "categories": {
+      "tableName": "categories",
       "schema": "public",
       "attributes": {
         "id": {
@@ -301,33 +318,50 @@
           "unique": false,
           "references": null
         },
-        "location": {
+        "slug": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": false,
           "type": "STRING",
-          "unique": false,
+          "unique": true,
           "references": null
         },
-        "items": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": false,
-          "defaultValue": [],
-          "type": "JSONB",
-          "unique": false,
-          "references": null
-        },
-        "active": {
+        "description": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": true,
-          "defaultValue": true,
-          "type": "BOOLEAN",
+          "type": "TEXT",
           "unique": false,
           "references": null
         },
-        "order": {
+        "parentId": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "UUID",
+          "unique": false,
+          "references": {
+            "model": "categories",
+            "key": "id"
+          }
+        },
+        "image": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "icon": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "sortOrder": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": true,
@@ -336,16 +370,39 @@
           "unique": false,
           "references": null
         },
-        "createdById": {
+        "isFeatured": {
           "primaryKey": false,
           "autoIncrement": false,
-          "allowNull": false,
-          "type": "UUID",
+          "allowNull": true,
+          "defaultValue": false,
+          "type": "BOOLEAN",
           "unique": false,
-          "references": {
-            "model": "users",
-            "key": "id"
-          }
+          "references": null
+        },
+        "status": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": "active",
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "metaTitle": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "metaDescription": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "TEXT",
+          "unique": false,
+          "references": null
         },
         "createdAt": {
           "primaryKey": false,
@@ -364,10 +421,35 @@
           "references": null
         }
       },
-      "indexes": []
+      "indexes": [
+        {
+          "name": "categories_slug",
+          "unique": false,
+          "fields": [
+            "slug"
+          ],
+          "using": "BTREE"
+        },
+        {
+          "name": "categories_parent_id",
+          "unique": false,
+          "fields": [
+            "parentId"
+          ],
+          "using": "BTREE"
+        },
+        {
+          "name": "categories_status",
+          "unique": false,
+          "fields": [
+            "status"
+          ],
+          "using": "BTREE"
+        }
+      ]
     },
-    "users": {
-      "tableName": "users",
+    "products": {
+      "tableName": "products",
       "schema": "public",
       "attributes": {
         "id": {
@@ -379,7 +461,7 @@
           "unique": false,
           "references": null
         },
-        "firstName": {
+        "name": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": false,
@@ -387,15 +469,7 @@
           "unique": false,
           "references": null
         },
-        "lastName": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": false,
-          "type": "STRING",
-          "unique": false,
-          "references": null
-        },
-        "email": {
+        "slug": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": false,
@@ -403,44 +477,64 @@
           "unique": true,
           "references": null
         },
-        "password": {
+        "description": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": false,
-          "type": "STRING",
-          "unique": false,
-          "references": null
-        },
-        "roleId": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": false,
-          "type": "UUID",
-          "unique": false,
-          "references": {
-            "model": "roles",
-            "key": "id"
-          }
-        },
-        "avatar": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": true,
-          "defaultValue": "",
-          "type": "STRING",
-          "unique": false,
-          "references": null
-        },
-        "bio": {
-          "primaryKey": false,
-          "autoIncrement": false,
-          "allowNull": true,
-          "defaultValue": "",
           "type": "TEXT",
           "unique": false,
           "references": null
         },
-        "isActive": {
+        "shortDescription": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "TEXT",
+          "unique": false,
+          "references": null
+        },
+        "price": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DECIMAL",
+          "unique": false,
+          "references": null
+        },
+        "salePrice": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "DECIMAL",
+          "unique": false,
+          "references": null
+        },
+        "costPrice": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "DECIMAL",
+          "unique": false,
+          "references": null
+        },
+        "sku": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": true,
+          "references": null
+        },
+        "quantity": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "defaultValue": 0,
+          "type": "INTEGER",
+          "unique": false,
+          "references": null
+        },
+        "isAvailable": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": true,
@@ -449,15 +543,29 @@
           "unique": false,
           "references": null
         },
-        "lastLogin": {
+        "categoryId": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "UUID",
+          "unique": false,
+          "references": {
+            "model": "categories",
+            "key": "id"
+          }
+        },
+        "brandId": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": true,
-          "type": "DATE",
+          "type": "UUID",
           "unique": false,
-          "references": null
+          "references": {
+            "model": "brands",
+            "key": "id"
+          }
         },
-        "passwordResetToken": {
+        "featuredImage": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": true,
@@ -465,11 +573,114 @@
           "unique": false,
           "references": null
         },
-        "passwordResetExpires": {
+        "isFeatured": {
           "primaryKey": false,
           "autoIncrement": false,
           "allowNull": true,
-          "type": "DATE",
+          "defaultValue": false,
+          "type": "BOOLEAN",
+          "unique": false,
+          "references": null
+        },
+        "isNew": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": false,
+          "type": "BOOLEAN",
+          "unique": false,
+          "references": null
+        },
+        "averageRating": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": 0,
+          "type": "FLOAT",
+          "unique": false,
+          "references": null
+        },
+        "reviewCount": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": 0,
+          "type": "INTEGER",
+          "unique": false,
+          "references": null
+        },
+        "specifications": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "JSONB",
+          "unique": false,
+          "references": null
+        },
+        "tags": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": [],
+          "type": "ARRAY",
+          "unique": false,
+          "references": null
+        },
+        "weight": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "FLOAT",
+          "unique": false,
+          "references": null
+        },
+        "dimensions": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "JSONB",
+          "unique": false,
+          "references": null
+        },
+        "warranty": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "status": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": "draft",
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "metaTitle": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "metaDescription": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "TEXT",
+          "unique": false,
+          "references": null
+        },
+        "viewCount": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": 0,
+          "type": "INTEGER",
           "unique": false,
           "references": null
         },
@@ -490,7 +701,260 @@
           "references": null
         }
       },
-      "indexes": []
+      "indexes": [
+        {
+          "name": "products_slug",
+          "unique": false,
+          "fields": [
+            "slug"
+          ],
+          "using": "BTREE"
+        },
+        {
+          "name": "products_category_id",
+          "unique": false,
+          "fields": [
+            "categoryId"
+          ],
+          "using": "BTREE"
+        },
+        {
+          "name": "products_brand_id",
+          "unique": false,
+          "fields": [
+            "brandId"
+          ],
+          "using": "BTREE"
+        },
+        {
+          "name": "products_status",
+          "unique": false,
+          "fields": [
+            "status"
+          ],
+          "using": "BTREE"
+        },
+        {
+          "name": "products_sku",
+          "unique": false,
+          "fields": [
+            "sku"
+          ],
+          "using": "BTREE"
+        }
+      ]
+    },
+    "product_images": {
+      "tableName": "product_images",
+      "schema": "public",
+      "attributes": {
+        "id": {
+          "primaryKey": true,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": {},
+          "type": "UUID",
+          "unique": false,
+          "references": null
+        },
+        "productId": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "UUID",
+          "unique": false,
+          "references": {
+            "model": "products",
+            "key": "id"
+          }
+        },
+        "url": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "alt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "isThumbnail": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": false,
+          "type": "BOOLEAN",
+          "unique": false,
+          "references": null
+        },
+        "sortOrder": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": 0,
+          "type": "INTEGER",
+          "unique": false,
+          "references": null
+        },
+        "createdAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        },
+        "updatedAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        }
+      },
+      "indexes": [
+        {
+          "name": "product_images_product_id",
+          "unique": false,
+          "fields": [
+            "productId"
+          ],
+          "using": "BTREE"
+        }
+      ]
+    },
+    "product_variants": {
+      "tableName": "product_variants",
+      "schema": "public",
+      "attributes": {
+        "id": {
+          "primaryKey": true,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": {},
+          "type": "UUID",
+          "unique": false,
+          "references": null
+        },
+        "productId": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "UUID",
+          "unique": false,
+          "references": {
+            "model": "products",
+            "key": "id"
+          }
+        },
+        "name": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "sku": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "STRING",
+          "unique": true,
+          "references": null
+        },
+        "price": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DECIMAL",
+          "unique": false,
+          "references": null
+        },
+        "salePrice": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "DECIMAL",
+          "unique": false,
+          "references": null
+        },
+        "quantity": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "defaultValue": 0,
+          "type": "INTEGER",
+          "unique": false,
+          "references": null
+        },
+        "isAvailable": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "defaultValue": true,
+          "type": "BOOLEAN",
+          "unique": false,
+          "references": null
+        },
+        "attributes": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "JSONB",
+          "unique": false,
+          "references": null
+        },
+        "image": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": true,
+          "type": "STRING",
+          "unique": false,
+          "references": null
+        },
+        "createdAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        },
+        "updatedAt": {
+          "primaryKey": false,
+          "autoIncrement": false,
+          "allowNull": false,
+          "type": "DATE",
+          "unique": false,
+          "references": null
+        }
+      },
+      "indexes": [
+        {
+          "name": "product_variants_product_id",
+          "unique": false,
+          "fields": [
+            "productId"
+          ],
+          "using": "BTREE"
+        },
+        {
+          "name": "product_variants_sku",
+          "unique": false,
+          "fields": [
+            "sku"
+          ],
+          "using": "BTREE"
+        }
+      ]
     }
   }
 }
